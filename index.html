@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valentines Day</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     .gradient-background {
-      background: rgb(255, 208, 229);
       background: linear-gradient(
         180deg,
         rgba(255, 208, 229, 1) 0%,
@@ -22,49 +22,57 @@
     }
 
     @keyframes bounce2 {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
     }
   </style>
 </head>
 
-<body class="gradient-background">
+<body class="gradient-background min-h-screen overflow-hidden">
 
-  <div class="flex items-center justify-center h-screen">
-    <div class="flex flex-col items-center p-4">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="flex flex-col items-center p-4 w-full max-w-md">
+
       <img
         id="imageDisplay"
         src="./images/image1.gif"
-        alt="Cute kitten with flowers"
-        class="rounded-md h-[300px]"
-        style="object-fit: cover;"
+        alt="Cute kitten"
+        class="rounded-md object-cover h-[220px] sm:h-[260px] md:h-[300px]"
       />
 
       <h2
         id="valentineQuestion"
-        class="text-4xl font-bold italic text-[#bd1e59] my-4"
+        class="font-bold italic text-[#bd1e59] my-4 text-center
+               text-2xl sm:text-3xl md:text-4xl"
       >
         Will you be my Valentine?
       </h2>
 
-      <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
+      <div
+        class="flex gap-4 pt-4 items-center justify-center flex-wrap"
+        id="responseButtons"
+      >
         <button
           id="yesButton"
-          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition"
+          class="bounce2 inline-flex items-center justify-center
+                 rounded-md text-lg sm:text-xl
+                 min-h-12 min-w-[90px]
+                 px-5 py-2
+                 bg-green-500 hover:bg-green-400
+                 text-white transition"
         >
           Yes
         </button>
 
         <button
           id="noButton"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition hover:bg-red-700 h-12 min-w-[75px] px-4 py-2 bg-red-500 text-white"
+          class="inline-flex items-center justify-center
+                 rounded-md text-lg sm:text-xl
+                 min-h-12 min-w-[90px]
+                 px-5 py-2
+                 bg-red-500 hover:bg-red-700
+                 text-white transition"
         >
           No
         </button>
@@ -72,17 +80,9 @@
     </div>
   </div>
 
-  <!-- 🎵 AUDIO -->
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_9cde94c45a.mp3" type="audio/mpeg">
-  </audio>
-
-  <audio id="escapeSound">
-    <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mpeg">
-  </audio>
-
-  <audio id="yesSound">
-    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+  <!-- 🔊 PIXABAY "NO NO NO" SOUND -->
+  <audio id="noNoSound">
+    <source src="./sounds/no-no-no.mp3" type="audio/mpeg">
   </audio>
 
 <script type="module">
@@ -93,28 +93,9 @@
   const imageDisplay = document.getElementById('imageDisplay');
   const valentineQuestion = document.getElementById('valentineQuestion');
   const responseButtons = document.getElementById('responseButtons');
-
-  const bgMusic = document.getElementById('bgMusic');
-  const escapeSound = document.getElementById('escapeSound');
-  const yesSound = document.getElementById('yesSound');
-
-  let musicStarted = false;
-
-  function startMusic() {
-    if (!musicStarted) {
-      bgMusic.volume = 0.35;
-      bgMusic.play().catch(() => {});
-      musicStarted = true;
-    }
-  }
-
-  document.body.addEventListener('click', startMusic, { once: true });
+  const noNoSound = document.getElementById('noNoSound');
 
   let noClickCount = 0;
-  let buttonHeight = 48;
-  let buttonWidth = 80;
-  let fontSize = 20;
-
   let escapeCount = 0;
   const MAX_ESCAPES = 3;
   let clickUnlocked = false;
@@ -138,14 +119,13 @@
     "I'm gonna cry... 😭"
   ];
 
-  /* -----------------------------
-     MOVE NO BUTTON (ESCAPE)
-  ------------------------------*/
   function moveNoButton() {
     if (clickUnlocked) return;
 
-    escapeSound.currentTime = 0;
-    escapeSound.play();
+    // 🔊 PLAY PIXABAY "NO NO NO" SOUND
+    noNoSound.currentTime = 0;
+    noNoSound.volume = 0.5;
+    noNoSound.play();
 
     const padding = 20;
     const rect = noButton.getBoundingClientRect();
@@ -153,15 +133,11 @@
     const maxX = window.innerWidth - rect.width - padding;
     const maxY = window.innerHeight - rect.height - padding;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
     noButton.style.position = "fixed";
-    noButton.style.left = `${x}px`;
-    noButton.style.top = `${y}px`;
+    noButton.style.left = `${Math.random() * maxX}px`;
+    noButton.style.top = `${Math.random() * maxY}px`;
 
     escapeCount++;
-
     if (escapeCount >= MAX_ESCAPES) {
       clickUnlocked = true;
     }
@@ -170,25 +146,13 @@
   noButton.addEventListener('mouseenter', moveNoButton);
   noButton.addEventListener('touchstart', moveNoButton);
 
-  /* -----------------------------
-     NO CLICK LOGIC
-  ------------------------------*/
-  noButton.addEventListener('click', function () {
+  noButton.addEventListener('click', () => {
     if (!clickUnlocked) return;
 
     if (noClickCount < 5) {
       noClickCount++;
 
       imageDisplay.src = imagePaths[noClickCount];
-
-      buttonHeight += 35;
-      buttonWidth += 35;
-      fontSize += 25;
-
-      yesButton.style.height = `${buttonHeight}px`;
-      yesButton.style.width = `${buttonWidth}px`;
-      yesButton.style.fontSize = `${fontSize}px`;
-
       noButton.textContent = noTexts[noClickCount] || "No";
 
       escapeCount = 0;
@@ -196,18 +160,16 @@
     }
   });
 
-  /* -----------------------------
-     YES BUTTON LOGIC
-  ------------------------------*/
   yesButton.addEventListener('click', () => {
-    yesSound.currentTime = 0;
-    yesSound.play();
-
     imageDisplay.src = './images/image7.gif';
-    valentineQuestion.textContent = "Yayyy!! :3";
+    valentineQuestion.textContent = "Happy Valentine’s Day 💖✨";
     responseButtons.style.display = 'none';
 
-    confetti();
+    confetti({
+      particleCount: 180,
+      spread: 90,
+      origin: { y: 0.6 }
+    });
   });
 </script>
 
